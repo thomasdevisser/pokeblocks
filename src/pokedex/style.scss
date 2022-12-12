@@ -4,3 +4,47 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
+
+.pokemon-info {
+  align-items: center;
+  background-color: rgb(152, 39, 39);
+  display: flex;
+  gap: 1rem;
+  padding: 2rem;
+
+  img {
+    background-color: white;
+    height: 100%;
+    object-fit: contain;
+    width: 250px;
+  }
+
+  .info {
+    color: white;
+    padding-block: 2rem;
+  }
+
+  .pokemon-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 1rem;
+  }
+
+  .meta {
+    margin: 1rem 0;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .types {
+    display: flex;
+  }
+
+  .type {
+    background-color: rgb(23, 122, 101);
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}

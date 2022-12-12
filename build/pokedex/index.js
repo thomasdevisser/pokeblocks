@@ -16,9 +16,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./editor.scss */ "./src/pokedex/editor.scss");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lodash */ "lodash");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./editor.scss */ "./src/pokedex/editor.scss");
+
+
 
 
 
@@ -26,23 +32,59 @@ __webpack_require__.r(__webpack_exports__);
 function Edit(_ref) {
   let {
     attributes: {
-      pokemonName
+      pokemon,
+      isFetching
     },
     setAttributes
   } = _ref;
-  const onChangePokemonName = e => {
+  let timeout;
+  const onChangePokemonName = value => {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
     setAttributes({
-      pokemonName: e.target.value
+      pokemon,
+      isFetching: true
     });
+    timeout = setTimeout(async () => {
+      const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${value.toLowerCase()}`);
+      pokemon = {};
+      if (res.status != 200) {
+        setAttributes({
+          isFetching: false,
+          pokemon
+        });
+        return;
+      }
+      const data = await res.json();
+      if (data) {
+        pokemon = data;
+        setAttributes({
+          isFetching: false,
+          pokemon
+        });
+      }
+    }, 2000);
   };
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)(), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    name: "pokemon-name",
-    value: pokemonName,
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)(), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "pokemon-input"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.__experimentalInputControl, {
     onChange: onChangePokemonName
-  }), pokemonName && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }), isFetching && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Spinner, null)), Object.keys(pokemon).length === 0 ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "No Pokemon found") : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "pokemon-info"
-  }, pokemonName, " is a cool Pokemon!"));
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    src: pokemon.sprites.front_default
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "info"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "pokemon-name"
+  }, lodash__WEBPACK_IMPORTED_MODULE_2___default().capitalize(pokemon.name)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "types"
+  }, pokemon.types.map(type => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    class: "type"
+  }, type.type.name))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "meta"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Height:"), " ", pokemon.height), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Weight:"), " ", pokemon.weight)))));
 }
 
 /***/ }),
@@ -93,6 +135,16 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "lodash":
+/*!*************************!*\
+  !*** external "lodash" ***!
+  \*************************/
+/***/ ((module) => {
+
+module.exports = window["lodash"];
+
+/***/ }),
+
 /***/ "@wordpress/block-editor":
 /*!*************************************!*\
   !*** external ["wp","blockEditor"] ***!
@@ -110,6 +162,16 @@ module.exports = window["wp"]["blockEditor"];
 /***/ ((module) => {
 
 module.exports = window["wp"]["blocks"];
+
+/***/ }),
+
+/***/ "@wordpress/components":
+/*!************************************!*\
+  !*** external ["wp","components"] ***!
+  \************************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["components"];
 
 /***/ }),
 
@@ -139,7 +201,7 @@ module.exports = window["wp"]["i18n"];
   \********************************/
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"pokeblocks/pokedex","version":"0.1.0","title":"Pokedex","category":"widgets","icon":"smiley","description":"Find information for any Pokemon by name.","supports":{"html":false},"attributes":{"pokemonName":{"type":"string","default":""}},"textdomain":"pokeblocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php"}');
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"pokeblocks/pokedex","version":"0.1.0","title":"Pokedex","category":"widgets","icon":"smiley","description":"Find information for any Pokemon by name.","supports":{"html":false},"attributes":{"pokemon":{"type":"object","default":{}},"isFetching":{"type":"boolean","default":"false"}},"textdomain":"pokeblocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php"}');
 
 /***/ })
 

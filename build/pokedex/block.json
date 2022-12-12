@@ -11,9 +11,13 @@
     "html": false
   },
   "attributes": {
-    "pokemonName": {
-      "type": "string",
-      "default": ""
+    "pokemon": {
+      "type": "object",
+      "default": {}
+    },
+    "isFetching": {
+      "type": "boolean",
+      "default": "false"
     }
   },
   "textdomain": "pokeblocks",

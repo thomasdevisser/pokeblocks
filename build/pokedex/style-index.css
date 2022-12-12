@@ -7,5 +7,42 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
+.pokemon-info {
+  align-items: center;
+  background-color: rgb(152, 39, 39);
+  display: flex;
+  gap: 1rem;
+  padding: 2rem;
+}
+.pokemon-info img {
+  background-color: white;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+  width: 250px;
+}
+.pokemon-info .info {
+  color: white;
+  padding-block: 2rem;
+}
+.pokemon-info .pokemon-name {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+.pokemon-info .meta {
+  margin: 1rem 0;
+}
+.pokemon-info .meta p {
+  margin: 0;
+}
+.pokemon-info .types {
+  display: flex;
+}
+.pokemon-info .type {
+  background-color: rgb(23, 122, 101);
+  font-size: 12px;
+  padding: 8px 12px;
+}
 
 /*# sourceMappingURL=style-index.css.map*/
